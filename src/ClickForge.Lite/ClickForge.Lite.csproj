@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>ClickForge.Lite</AssemblyName>
+    <ApplicationIcon>..\ClickForge.App\ClickForge.ico</ApplicationIcon>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClickForge.Automation\ClickForge.Automation.csproj"/>
+    <ProjectReference Include="..\ClickForge.Storage\ClickForge.Storage.csproj"/>
+  </ItemGroup>
+</Project>

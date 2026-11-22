@@ -1,0 +1,61 @@
+<UserControl x:Class="ClickForge.UI.FeedbackPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <Border Style="{DynamicResource Card}">
+            <StackPanel>
+                <TextBlock Text="Обратная связь" FontSize="19" FontWeight="Bold"/>
+                <TextBlock Text="Задайте вопрос, сообщите об ошибке или предложите улучшение." Foreground="{DynamicResource Muted}" TextWrapping="Wrap" Margin="0,5,0,12"/>
+                <Border Background="{DynamicResource Inset}" CornerRadius="8" Padding="12" Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock Text="Telegram-бот поддержки" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        <TextBlock Text="@ClickForge_Helpbot" Foreground="{DynamicResource Tint}" FontWeight="SemiBold" Margin="0,4"/>
+                        <TextBlock Text="Откройте чат с ботом и вставьте скопированное обращение." Foreground="{DynamicResource Muted}" TextWrapping="Wrap"/>
+                        <Button Content="Открыть Telegram" Click="OpenSupportBot" HorizontalAlignment="Left"/>
+                        <TextBlock x:Name="TelegramStatus" Foreground="{DynamicResource DangerInk}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+                <Expander Header="Подготовить обращение" Foreground="{DynamicResource Ink}" HorizontalContentAlignment="Stretch" Margin="0,4,0,0">
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock Text="Заполните поля, проверьте текст и скопируйте обращение для Telegram." Foreground="{DynamicResource Muted}" TextWrapping="Wrap"/>
+                        <ComboBox x:Name="Category" AutomationProperties.Name="Тип обращения" SelectionChanged="CategoryChanged">
+                            <ComboBoxItem Content="Сообщить об ошибке"/>
+                            <ComboBoxItem Content="Предложить улучшение"/>
+                            <ComboBoxItem Content="Задать вопрос"/>
+                        </ComboBox>
+                        <StackPanel x:Name="FirstField" Margin="0,8,0,0">
+                            <TextBlock x:Name="FirstLabel"/>
+                            <TextBox x:Name="FirstInput" AutomationProperties.LabeledBy="{Binding ElementName=FirstLabel}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="52" TextChanged="InputChanged"/>
+                        </StackPanel>
+                        <StackPanel x:Name="SecondField">
+                            <TextBlock x:Name="SecondLabel"/>
+                            <TextBox x:Name="SecondInput" AutomationProperties.LabeledBy="{Binding ElementName=SecondLabel}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="52" TextChanged="InputChanged"/>
+                        </StackPanel>
+                        <StackPanel x:Name="ThirdField">
+                            <TextBlock x:Name="ThirdLabel"/>
+                            <TextBox x:Name="ThirdInput" AutomationProperties.LabeledBy="{Binding ElementName=ThirdLabel}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="52" TextChanged="InputChanged"/>
+                        </StackPanel>
+                        <TextBlock Text="Предпросмотр обращения" Margin="0,8,0,0"/>
+                        <TextBox x:Name="Preview" IsReadOnly="True" AutomationProperties.Name="Предпросмотр обращения"
+                                 TextWrapping="Wrap" MinHeight="76" MaxHeight="168" VerticalScrollBarVisibility="Auto"/>
+                        <WrapPanel>
+                            <Button x:Name="CopyButton" Content="Скопировать обращение" Click="CopyFeedback" Background="{DynamicResource Accent}"/>
+                            <TextBlock x:Name="CopyStatus" AutomationProperties.LiveSetting="Polite" Foreground="{DynamicResource Muted}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Expander>
+            </StackPanel>
+        </Border>
+        <Border Style="{DynamicResource Card}">
+            <StackPanel>
+                <TextBlock Text="О программе" FontSize="19" FontWeight="Bold"/>
+                <TextBlock x:Name="ProductVersion" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                <TextBlock Text="Локальный автокликер для Windows с поддержкой последовательностей кликов и глобальных горячих клавиш"
+                           Foreground="{DynamicResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                <TextBlock Text="Автор на GitHub: Slake1301" Margin="0,8,0,4"/>
+                <Button Content="Профиль автора" Click="OpenAuthorProfile" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="ProfileStatus" Foreground="{DynamicResource DangerInk}" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>
