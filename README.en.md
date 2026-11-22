@@ -6,6 +6,8 @@
 
 **[⬇️ Download for Windows x64](https://github.com/Slake1301/ClickForge/releases/latest)**
 
+[Official download page in Russian](https://slake1301.github.io/ClickForge/)
+
 ## Choose your edition
 
 | | ClickForge | ClickForge Lite |

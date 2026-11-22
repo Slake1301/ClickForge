@@ -4,6 +4,8 @@
 
 **Автокликер для Windows с двумя версиями: компактной Lite и полной ClickForge.**
 
+**[Официальный сайт и скачивание](https://slake1301.github.io/ClickForge/)**
+
 [![Windows 10/11 · x64](https://img.shields.io/badge/Windows%2010%20%2F%2011-x64-5140CE)](https://github.com/Slake1301/ClickForge/releases/latest)
 [![Актуальный релиз](https://img.shields.io/github/v/release/Slake1301/ClickForge?label=Релиз&color=5140CE)](https://github.com/Slake1301/ClickForge/releases/latest)
 [![Поддержка в Telegram](https://img.shields.io/badge/Telegram-Поддержка-2378B7)](https://t.me/ClickForge_Helpbot)
