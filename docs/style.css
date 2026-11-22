@@ -47,6 +47,8 @@ ol { padding-left: 1.5rem; }
 li { margin-block: .65rem; padding-left: .25rem; }
 .footer { border-top: 1px solid var(--border); }
 .footer p { margin: 0; }
+.guide { max-width: 50rem; padding-block: clamp(2rem, 6vw, 4rem); }
+.guide section { margin-top: 2rem; }
 @media (max-width: 52rem) {
   .hero, .editions { grid-template-columns: 1fr; }
 }
