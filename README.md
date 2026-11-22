@@ -1,5 +1,7 @@
 # ClickForge
 
+**Русский** · [English](README.en.md)
+
 **Автокликер для Windows с двумя версиями: компактной Lite и полной ClickForge.**
 
 [![Windows 10/11 · x64](https://img.shields.io/badge/Windows%2010%20%2F%2011-x64-5140CE)](https://github.com/Slake1301/ClickForge/releases/latest)
