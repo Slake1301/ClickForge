@@ -15,7 +15,7 @@ public sealed class MainViewModel : ObservableObject
     private AppSettings _settings;
     private AutomationSnapshot _snapshot = new(AutomationState.Stopped, 0, 0, TimeSpan.Zero);
     private int _selectedSection;
-    private string _message = "Готов к работе";
+    private string _message = UiText.Get("Готов к работе");
 
     public MainViewModel(IAutomationEngine engine, IInputService input, ISettingsStore store, IStatisticsService stats, AppSettings settings)
     {
@@ -27,7 +27,7 @@ public sealed class MainViewModel : ObservableObject
         StartSequenceCommand = new AsyncCommand(StartSequenceAsync);
         AddStepCommand = new RelayCommand(AddStep);
         RemoveStepCommand = new RelayCommand<MultiClickStep>(RemoveStep);
-        ClearStatisticsCommand = new RelayCommand(() => { _stats.Clear(); Raise(nameof(TotalClicks)); Message = "Статистика очищена"; });
+        ClearStatisticsCommand = new RelayCommand(() => { _stats.Clear(); Raise(nameof(TotalClicks)); Message = UiText.Get("Статистика очищена"); });
         _engine.SnapshotChanged += OnSnapshot;
     }
 
@@ -40,8 +40,8 @@ public sealed class MainViewModel : ObservableObject
     public AutomationSnapshot Snapshot { get => _snapshot; private set { _snapshot = value; Raise(); Raise(nameof(StatusText)); Raise(nameof(StartText)); } }
     public int SelectedSection { get => _selectedSection; set => Set(ref _selectedSection, value); }
     public string Message { get => _message; set => Set(ref _message, value); }
-    public string StatusText => Snapshot.State switch { AutomationState.Running => "РАБОТАЕТ", AutomationState.Paused => "ПАУЗА", _ => "ОСТАНОВЛЕН" };
-    public string StartText => Snapshot.State == AutomationState.Stopped ? "▶  ЗАПУСТИТЬ" : "■  ОСТАНОВИТЬ";
+    public string StatusText => Snapshot.State switch { AutomationState.Running => UiText.Get("РАБОТАЕТ"), AutomationState.Paused => UiText.Get("ПАУЗА"), _ => UiText.Get("ОСТАНОВЛЕН") };
+    public string StartText => Snapshot.State == AutomationState.Stopped ? UiText.Get("▶  ЗАПУСТИТЬ") : UiText.Get("■  ОСТАНОВИТЬ");
     public long TotalClicks => _stats.TotalClicks;
     public ICommand StartStopCommand { get; }
     public ICommand PauseCommand { get; }
@@ -52,6 +52,8 @@ public sealed class MainViewModel : ObservableObject
     public ICommand RemoveStepCommand { get; }
     public ICommand ClearStatisticsCommand { get; }
     public string StartHotkey => Settings.StartHotkey;
+    public string QuickStartShortcut => UiText.Get("3. Наведите курсор на безопасную область и выполните назначенное нажатие: {0}. По умолчанию — F6.", StartGesture);
+    public string StartShortcutLabel => UiText.Get("{0}  Старт / стоп", StartGesture);
     public string StartGesture
     {
         get
@@ -67,6 +69,8 @@ public sealed class MainViewModel : ObservableObject
         Settings = settings;
         Raise(nameof(StartHotkey));
         Raise(nameof(StartGesture));
+        Raise(nameof(StartShortcutLabel));
+        Raise(nameof(QuickStartShortcut));
     }
     public int StartPressCount => Settings.StartPressCount == 2 ? 2 : 1;
     public async Task SaveStartHotkeyAsync(string key, int count)
@@ -84,18 +88,20 @@ public sealed class MainViewModel : ObservableObject
         }
         Raise(nameof(StartHotkey));
         Raise(nameof(StartGesture));
+        Raise(nameof(StartShortcutLabel));
+        Raise(nameof(QuickStartShortcut));
     }
 
     public async Task ToggleFromHotkeyAsync() => await StartStopAsync();
     public void PauseFromHotkey() => PauseResume();
-    public Task EmergencyStopAsync() { Message = "Экстренная остановка"; return _engine.StopAsync(); }
+    public Task EmergencyStopAsync() { Message = UiText.Get("Экстренная остановка"); return _engine.StopAsync(); }
 
     private async Task StartStopAsync()
     {
         try
         {
             if (_engine.State != AutomationState.Stopped) await _engine.StopAsync();
-            else { await _engine.StartClickerAsync(Settings.Clicker); Message = "Автоматизация запущена"; }
+            else { await _engine.StartClickerAsync(Settings.Clicker); Message = UiText.Get("Автоматизация запущена"); }
         }
         catch (Exception ex) { Message = ex.Message; }
     }
@@ -109,14 +115,14 @@ public sealed class MainViewModel : ObservableObject
         {
             for (int seconds = 3; seconds > 0; seconds--)
             {
-                Message = $"Наведите курсор на цель. Захват через {seconds} сек.";
+                Message = UiText.Get("Наведите курсор на цель. Захват через {0} сек.", seconds);
                 await Task.Delay(1000);
             }
             var point = _input.GetCursorPosition();
             Settings.Clicker.X = point.X;
             Settings.Clicker.Y = point.Y;
             Settings.Clicker.PositionMode = PositionMode.Fixed;
-            Message = $"Выбрана точка X: {point.X}, Y: {point.Y}";
+            Message = UiText.Get("Выбрана точка X: {0}, Y: {1}", point.X, point.Y);
         }
         catch (Exception ex) { Message = ex.Message; }
     }
@@ -127,17 +133,17 @@ public sealed class MainViewModel : ObservableObject
     }
     private void AddStep()
     {
-        var p = _input.GetCursorPosition(); Steps.Add(new() { Name = $"Точка {Steps.Count + 1}", X = p.X, Y = p.Y });
+        var p = _input.GetCursorPosition(); Steps.Add(new() { Name = UiText.Get("Точка {0}", Steps.Count + 1), X = p.X, Y = p.Y });
     }
     private void RemoveStep(MultiClickStep? step) { if (step is not null) Steps.Remove(step); }
-    private async Task SaveAsync() { await _store.SaveAsync(Settings); await _stats.SaveAsync(); Message = "Настройки сохранены"; }
+    private async Task SaveAsync() { await _store.SaveAsync(Settings); await _stats.SaveAsync(); Message = UiText.Get("Настройки сохранены"); }
     private void OnSnapshot(object? sender, AutomationSnapshot value)
     {
         Application.Current.Dispatcher.BeginInvoke(() =>
         {
             Snapshot = value;
             Raise(nameof(TotalClicks));
-            if (value.Error is not null) Message = "Ошибка: " + value.Error;
+            if (value.Error is not null) Message = UiText.Get("Ошибка: ") + value.Error;
         });
     }
 }

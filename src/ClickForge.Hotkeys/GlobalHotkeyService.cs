@@ -1,3 +1,4 @@
+using ClickForge.Core;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -15,7 +16,7 @@ public sealed class GlobalHotkeyService : IDisposable
     public static string DisplayName(Key key) => key switch
     {
         MouseLeft => "Mouse 1", MouseRight => "Mouse 2", MouseMiddle => "Mouse 3",
-        MouseBack => "Mouse 4 (Назад)", MouseForward => "Mouse 5 (Вперёд)",
+        MouseBack => UiText.Get("Mouse 4 (Назад)"), MouseForward => UiText.Get("Mouse 5 (Вперёд)"),
         >= Key.D0 and <= Key.D9 => (key - Key.D0).ToString(), _ => key.ToString()
     };
     private const int WmHotkey = 0x0312;
@@ -47,7 +48,7 @@ public sealed class GlobalHotkeyService : IDisposable
     {
         if (pressCount is not (1 or 2)) throw new ArgumentOutOfRangeException(nameof(pressCount));
         if (key is Key.F7 or Key.F10 or Key.F12 or Key.None)
-            throw new InvalidOperationException("Эта клавиша зарезервирована.");
+            throw new InvalidOperationException(UiText.Get("Эта клавиша зарезервирована."));
         if (key == _startKey && pressCount == _pressCount) return;
         var newId = _startId == 4 ? 1 : 4;
         bool needsKeyboardHook = pressCount == 2;
@@ -60,13 +61,13 @@ public sealed class GlobalHotkeyService : IDisposable
             {
                 _keyboardProc = ObserveKeyboard;
                 _keyboardHook = SetWindowsHookEx(13, _keyboardProc, GetModuleHandle(null), 0);
-                if (_keyboardHook == 0) throw new Win32Exception(Marshal.GetLastWin32Error(), "Не удалось включить двойное нажатие.");
+                if (_keyboardHook == 0) throw new Win32Exception(Marshal.GetLastWin32Error(), UiText.Get("Не удалось включить двойное нажатие."));
             }
             if (needsMouseHook && !hadMouseHook)
             {
                 _mouseProc = ObserveMouse;
                 _mouseHook = SetWindowsHookEx(14, _mouseProc, GetModuleHandle(null), 0);
-                if (_mouseHook == 0) throw new Win32Exception(Marshal.GetLastWin32Error(), "Не удалось подключить кнопки мыши.");
+                if (_mouseHook == 0) throw new Win32Exception(Marshal.GetLastWin32Error(), UiText.Get("Не удалось подключить кнопки мыши."));
             }
             if (pressCount == 1 && !IsMouse(key)) Register(newId, key);
         }
@@ -165,7 +166,7 @@ public sealed class GlobalHotkeyService : IDisposable
     private void Register(int id, Key key)
     {
         var vk = KeyInterop.VirtualKeyFromKey(key);
-        if (!RegisterHotKey(_handle, id, 0x4000, (uint)vk)) throw new Win32Exception(Marshal.GetLastWin32Error(), $"Не удалось зарегистрировать {key}.");
+        if (!RegisterHotKey(_handle, id, 0x4000, (uint)vk)) throw new Win32Exception(Marshal.GetLastWin32Error(), UiText.Get("Не удалось зарегистрировать {0}.", key));
     }
     private nint Hook(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
     {

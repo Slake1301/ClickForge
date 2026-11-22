@@ -5,12 +5,14 @@
 **Автокликер для Windows с двумя версиями: компактной Lite и полной ClickForge.**
 
 [![Windows 10/11 · x64](https://img.shields.io/badge/Windows%2010%20%2F%2011-x64-5140CE)](https://github.com/Slake1301/ClickForge/releases/latest)
-[![Версия 0.2.19](https://img.shields.io/badge/Релиз-0.2.19-5140CE)](https://github.com/Slake1301/ClickForge/releases/latest)
+[![Актуальный релиз](https://img.shields.io/github/v/release/Slake1301/ClickForge?label=Релиз&color=5140CE)](https://github.com/Slake1301/ClickForge/releases/latest)
 [![Поддержка в Telegram](https://img.shields.io/badge/Telegram-Поддержка-2378B7)](https://t.me/ClickForge_Helpbot)
 
 [Скачать установщик](#установка) · [Сравнить версии](#какую-версию-выбрать) · [Быстрый старт](#быстрый-старт) · [Поддержка](#поддержка)
 
 ## Установка
+
+Начиная с версии 0.2.20, в полной версии язык можно выбрать в **Настройки → Язык / Language**, а в Lite — внизу окна. Выберите **Русский** или **English** и перезапустите приложение.
 
 ### 1. ⬇️ Скачать
 

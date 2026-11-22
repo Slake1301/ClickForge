@@ -1,3 +1,4 @@
+using ClickForge.Core;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -55,14 +56,14 @@ internal sealed class LiteShortcut(Action activate) : IDisposable
     public static string Name(int key) => key switch
     {
         1 => "Mouse 1", 2 => "Mouse 2", 4 => "Mouse 3",
-        5 => "Mouse 4 (Назад)", 6 => "Mouse 5 (Вперёд)",
+        5 => UiText.Get("Mouse 4 (Назад)"), 6 => UiText.Get("Mouse 5 (Вперёд)"),
         >= 0x30 and <= 0x39 => ((char)key).ToString(), _ => ((Keys)key).ToString()
     };
 
     private static nint Install(int type, HookProc callback)
     {
         var hook = SetWindowsHookEx(type, callback, GetModuleHandle(null), 0);
-        if (hook == 0) throw new Win32Exception(Marshal.GetLastWin32Error(), "Не удалось подключить горячую кнопку.");
+        if (hook == 0) throw new Win32Exception(Marshal.GetLastWin32Error(), UiText.Get("Не удалось подключить горячую кнопку."));
         return hook;
     }
 

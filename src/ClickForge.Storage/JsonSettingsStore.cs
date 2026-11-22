@@ -39,8 +39,8 @@ public sealed class JsonSettingsStore : ISettingsStore
     public async Task<AppSettings> ImportAsync(string source, CancellationToken token = default)
     {
         await using var stream = File.OpenRead(source);
-        var result = await JsonSerializer.DeserializeAsync<AppSettings>(stream, _json, token) ?? throw new InvalidDataException("Файл конфигурации пуст.");
-        if (result.SchemaVersion != 1) throw new InvalidDataException("Неподдерживаемая версия конфигурации.");
+        var result = await JsonSerializer.DeserializeAsync<AppSettings>(stream, _json, token) ?? throw new InvalidDataException(UiText.Get("Файл конфигурации пуст."));
+        if (result.SchemaVersion != 1) throw new InvalidDataException(UiText.Get("Неподдерживаемая версия конфигурации."));
         return result;
     }
 
@@ -48,8 +48,8 @@ public sealed class JsonSettingsStore : ISettingsStore
     {
         MultiClickSteps =
         [
-            new() { Name = "Точка A", X = 100, Y = 100, DelayAfterMs = 500 },
-            new() { Name = "Точка B", X = 300, Y = 200, ClickType = ClickType.Double, DelayAfterMs = 1000 }
+            new() { Name = UiText.Get("Точка A"), X = 100, Y = 100, DelayAfterMs = 500 },
+            new() { Name = UiText.Get("Точка B"), X = 300, Y = 200, ClickType = ClickType.Double, DelayAfterMs = 1000 }
         ]
     };
 }

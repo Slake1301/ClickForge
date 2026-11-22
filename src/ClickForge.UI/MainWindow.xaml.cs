@@ -1,3 +1,4 @@
+using UiText = ClickForge.Core.UiText;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,7 +27,7 @@ public partial class MainWindow : Window
             StartKeyPicker.DisplayMemberPath = "Value";
             StartKeyPicker.SelectedValuePath = "Key";
             PopulateStartKeys(Enum.TryParse<Key>(_viewModel.StartHotkey, out var key) ? key : Key.F6);
-            StartPressCountPicker.ItemsSource = new Dictionary<int, string> { [1] = "1 — одиночное", [2] = "2 — двойное" };
+            StartPressCountPicker.ItemsSource = new Dictionary<int, string> { [1] = UiText.Get("1 — одиночное"), [2] = UiText.Get("2 — двойное") };
             StartPressCountPicker.DisplayMemberPath = "Value";
             StartPressCountPicker.SelectedValuePath = "Key";
             StartPressCountPicker.SelectedValue = _viewModel.StartPressCount;
@@ -42,10 +43,10 @@ public partial class MainWindow : Window
         var choices = Enumerable.Range((int)Key.F1, 11).Select(value => (Key)value)
             .ToDictionary(key => key, key => key switch
             {
-                Key.F7 => "F7 (пауза)", Key.F10 => "F10 (аварийная остановка)", _ => key.ToString()
+                Key.F7 => UiText.Get("F7 (пауза)"), Key.F10 => UiText.Get("F10 (аварийная остановка)"), _ => key.ToString()
             });
         if (!choices.ContainsKey(selected)) choices[selected] = GlobalHotkeyService.DisplayName(selected);
-        choices[CustomKey] = "Ввести кнопку самому…";
+        choices[CustomKey] = UiText.Get("Ввести кнопку самому…");
         _capturingStartKey = false;
         StartKeyPicker.ItemsSource = choices;
         StartKeyPicker.SelectedValue = selected;
@@ -58,7 +59,7 @@ public partial class MainWindow : Window
         if (selected == CustomKey)
         {
             _capturingStartKey = true;
-            _viewModel.Message = "Нажмите клавишу или кнопку мыши в этом окне. Esc — отмена.";
+            _viewModel.Message = UiText.Get("Нажмите клавишу или кнопку мыши в этом окне. Esc — отмена.");
         }
         else { _capturingStartKey = false; _capturePrevious = selected; }
     }
@@ -68,7 +69,7 @@ public partial class MainWindow : Window
         if (!_capturingStartKey) { base.OnPreviewKeyDown(e); return; }
         e.Handled = true;
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        if (key == Key.Escape) { PopulateStartKeys(_capturePrevious); _viewModel.Message = "Ввод отменён."; }
+        if (key == Key.Escape) { PopulateStartKeys(_capturePrevious); _viewModel.Message = UiText.Get("Ввод отменён."); }
         else if (!e.IsRepeat && KeyInterop.VirtualKeyFromKey(key) != 0) FinishStartKeyCapture(key);
     }
 
@@ -92,11 +93,11 @@ public partial class MainWindow : Window
     {
         if (key is Key.F7 or Key.F10 or Key.F12)
         {
-            _viewModel.Message = $"{key} зарезервирована. Выберите другую кнопку или нажмите Esc.";
+            _viewModel.Message = UiText.Get("{0} зарезервирована. Выберите другую кнопку или нажмите Esc.", key);
             return;
         }
         PopulateStartKeys(key);
-        _viewModel.Message = $"Выбрано: {GlobalHotkeyService.DisplayName(key)}. Укажите число нажатий и примените.";
+        _viewModel.Message = UiText.Get("Выбрано: {0}. Укажите число нажатий и примените.", GlobalHotkeyService.DisplayName(key));
     }
     private void CheckUpdatesOnStartup(object? sender, EventArgs e)
     {
@@ -111,7 +112,7 @@ public partial class MainWindow : Window
     {
         if (_checkingUpdates) return;
         _checkingUpdates = true;
-        if (manual) _viewModel.Message = "Проверяем обновления…";
+        if (manual) _viewModel.Message = UiText.Get("Проверяем обновления…");
         try
         {
             var installed = Assembly.GetEntryAssembly()!.GetName().Version!;
@@ -120,19 +121,19 @@ public partial class MainWindow : Window
             if (update is { } available)
             {
                 var choice = MessageBox.Show(this,
-                    $"Доступна версия {available.Version}. Открыть страницу загрузки установщика?",
-                    "Обновление ClickForge", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    UiText.Get("Доступна версия {0}. Открыть страницу загрузки установщика?", available.Version),
+                    UiText.Get("Обновление ClickForge"), MessageBoxButton.YesNo, MessageBoxImage.Information);
                 if (choice == MessageBoxResult.Yes)
                     Process.Start(new ProcessStartInfo(available.Page.AbsoluteUri) { UseShellExecute = true });
-                if (manual) _viewModel.Message = $"Доступна версия {available.Version}.";
+                if (manual) _viewModel.Message = UiText.Get("Доступна версия {0}.", available.Version);
             }
-            else if (manual) _viewModel.Message = "Новых опубликованных версий нет.";
+            else if (manual) _viewModel.Message = UiText.Get("Новых опубликованных версий нет.");
         }
         catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or TaskCanceledException
             or System.Text.Json.JsonException or InvalidOperationException or KeyNotFoundException
             or System.ComponentModel.Win32Exception)
         {
-            if (manual) _viewModel.Message = "Не удалось проверить обновления. Попробуйте позже.";
+            if (manual) _viewModel.Message = UiText.Get("Не удалось проверить обновления. Попробуйте позже.");
         }
         finally { _checkingUpdates = false; }
     }
@@ -148,7 +149,7 @@ public partial class MainWindow : Window
             _hotkeys.ChangeStartKey(key, count);
             try { await _viewModel.SaveStartHotkeyAsync(key.ToString(), count); }
             catch { _hotkeys.ChangeStartKey(oldKey, oldCount); throw; }
-            _viewModel.Message = $"{GlobalHotkeyService.DisplayName(key)} × {count} — запуск / остановка. F10 — аварийная остановка.";
+            _viewModel.Message = UiText.Get("{0} × {1} — запуск / остановка. F10 — аварийная остановка.", GlobalHotkeyService.DisplayName(key), count);
         }
         catch (Exception ex) { _viewModel.Message = ex.Message; }
         finally { button.IsEnabled = true; }

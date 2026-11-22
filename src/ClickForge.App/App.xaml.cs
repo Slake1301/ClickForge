@@ -1,6 +1,7 @@
 using System.Windows;
 using System.IO;
 using ClickForge.Automation;
+using ClickForge.Core;
 using ClickForge.Diagnostics;
 using ClickForge.Hotkeys;
 using ClickForge.Input;
@@ -25,6 +26,7 @@ public partial class App : Application
         var input = new WindowsInputService();
         _engine = new AutomationEngine(input, stats);
         var settings = await store.LoadAsync();
+        UiText.Language = settings.Language;
         var vm = new MainViewModel(_engine, input, store, stats, settings);
         MainWindow = new MainWindow(vm, new GlobalHotkeyService());
         MainWindow.Icon = System.Windows.Media.Imaging.BitmapFrame.Create(new Uri("pack://application:,,,/ClickForge;component/ClickForge.ico"));

@@ -1,3 +1,4 @@
+using ClickForge.Core;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -8,17 +9,17 @@ namespace ClickForge.UI;
 
 public partial class FeedbackPanel : UserControl
 {
-    private static readonly (string Title, string[] Labels)[] Forms =
+    private readonly (string Title, string[] Labels)[] _forms =
     [
-        ("Сообщить об ошибке", ["Что произошло", "Что ожидалось", "Как повторить"]),
-        ("Предложить улучшение", ["Что хочется добавить или изменить", "В какой ситуации это пригодится"]),
-        ("Задать вопрос", ["Вопрос"])
+        (UiText.Get("Сообщить об ошибке"), [UiText.Get("Что произошло"), UiText.Get("Что ожидалось"), UiText.Get("Как повторить")]),
+        (UiText.Get("Предложить улучшение"), [UiText.Get("Что хочется добавить или изменить"), UiText.Get("В какой ситуации это пригодится")]),
+        (UiText.Get("Задать вопрос"), [UiText.Get("Вопрос")])
     ];
 
     private readonly string?[][] _drafts = [new string?[3], new string?[3], new string?[3]];
     private int _category = -1;
     private bool _switching;
-    private static string VersionText => Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3) ?? "неизвестна";
+    private static string VersionText => Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3) ?? UiText.Get("неизвестна");
 
     public FeedbackPanel()
     {
@@ -33,7 +34,7 @@ public partial class FeedbackPanel : UserControl
         if (next < 0 || next == _category) return;
         if (_category >= 0) _drafts[_category] = [FirstInput.Text, SecondInput.Text, ThirdInput.Text];
         _category = next;
-        var labels = Forms[next].Labels;
+        var labels = _forms[next].Labels;
         _switching = true;
         FirstLabel.Text = labels[0];
         SecondLabel.Text = labels.ElementAtOrDefault(1) ?? "";
@@ -54,7 +55,7 @@ public partial class FeedbackPanel : UserControl
 
     private void RefreshPreview()
     {
-        var (title, labels) = Forms[_category];
+        var (title, labels) = _forms[_category];
         string[] fields = [FirstInput.Text.Trim(), SecondInput.Text.Trim(), ThirdInput.Text.Trim()];
         var sections = labels.Select((label, index) => $"{label}:\n{fields[index]}");
         string text = title + "\n\n" + string.Join("\n\n", sections);
@@ -72,11 +73,11 @@ public partial class FeedbackPanel : UserControl
         try
         {
             Clipboard.SetText(Preview.Text);
-            CopyStatus.Text = "Обращение скопировано";
+            CopyStatus.Text = UiText.Get("Обращение скопировано");
         }
         catch (ExternalException)
         {
-            CopyStatus.Text = "Буфер обмена недоступен. Попробуйте ещё раз.";
+            CopyStatus.Text = UiText.Get("Буфер обмена недоступен. Попробуйте ещё раз.");
         }
     }
 
@@ -89,7 +90,7 @@ public partial class FeedbackPanel : UserControl
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            TelegramStatus.Text = "Не удалось открыть ссылку. Найдите @ClickForge_Helpbot в Telegram.";
+            TelegramStatus.Text = UiText.Get("Не удалось открыть ссылку. Найдите @ClickForge_Helpbot в Telegram.");
         }
     }
 
@@ -102,7 +103,7 @@ public partial class FeedbackPanel : UserControl
         }
         catch (System.ComponentModel.Win32Exception)
         {
-            ProfileStatus.Text = "Не удалось открыть браузер. Профиль на GitHub: Slake1301.";
+            ProfileStatus.Text = UiText.Get("Не удалось открыть браузер. Профиль на GitHub: Slake1301.");
         }
     }
 

@@ -23,7 +23,7 @@ Both editions support a custom keyboard or mouse button as the start shortcut, w
 2. Run the installer and open ClickForge from the Windows Start menu. A separate .NET installation is unnecessary.
 3. For a first test, select the left mouse button, a **1000 ms** interval and **3 clicks**. Point at a safe area and press the default start key.
 
-The current app interface is in Russian. In the full edition, **Автокликер** is the clicker, **Мультикликер** configures a sequence, and **Настройки** opens settings. The [Russian guide](README.md#быстрый-старт) shows the exact field names.
+Starting with version 0.2.20, choose **English** under **Настройки → Язык / Language** in the full edition or at the bottom of the Lite window. Restart the app to apply the language. Your choice is kept between launches; you can switch back by selecting **Русский**.
 
 ## Feedback
 

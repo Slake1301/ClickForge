@@ -39,15 +39,15 @@ public sealed class ClickSettings : ObservableObject
 
     public void Validate()
     {
-        if (IntervalMs < 1) throw new InvalidOperationException("Интервал должен быть не меньше 1 мс.");
-        if (UseRandomInterval && RandomMaxMs < IntervalMs) throw new InvalidOperationException("Максимальный интервал меньше минимального.");
-        if (RepeatMode == RepeatMode.Count && RepeatCount < 1) throw new InvalidOperationException("Число повторов должно быть положительным.");
+        if (IntervalMs < 1) throw new InvalidOperationException(UiText.Get("Интервал должен быть не меньше 1 мс."));
+        if (UseRandomInterval && RandomMaxMs < IntervalMs) throw new InvalidOperationException(UiText.Get("Максимальный интервал меньше минимального."));
+        if (RepeatMode == RepeatMode.Count && RepeatCount < 1) throw new InvalidOperationException(UiText.Get("Число повторов должно быть положительным."));
     }
 }
 
 public sealed class MultiClickStep : ObservableObject
 {
-    private string _name = "Новая точка";
+    private string _name = UiText.Get("Новая точка");
     private bool _enabled = true;
     public Guid Id { get; init; } = Guid.NewGuid();
     public string Name { get => _name; set => Set(ref _name, value); }

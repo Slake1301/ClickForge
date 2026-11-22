@@ -1,6 +1,7 @@
 <UserControl x:Class="ClickForge.UI.HelpGuide"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:ClickForge.UI">
     <UserControl.Resources>
         <Style x:Key="GuideText" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource Ink}"/>
@@ -18,33 +19,33 @@
     </UserControl.Resources>
     <Border Style="{DynamicResource Card}">
         <StackPanel>
-            <TextBlock Text="Инструкция" FontSize="19" FontWeight="Bold"/>
-            <TextBlock Text="Быстрый старт" FontWeight="SemiBold" Foreground="{DynamicResource Tint}" Margin="0,12,0,4"/>
-            <TextBlock Style="{StaticResource GuideText}" Text="1. В разделе «Автокликер» выберите «Левая» и «Одиночный клик». Оставьте «Следовать за курсором»."/>
-            <TextBlock Style="{StaticResource GuideText}" Text="2. Выключите «Случайный интервал», задайте интервал 1000 мс и выберите «По количеству повторений». Укажите 3 повторения."/>
-            <TextBlock Style="{StaticResource GuideText}" Text="{Binding StartGesture, StringFormat='3. Наведите курсор на безопасную область и выполните назначенное нажатие: {0}. По умолчанию — F6.'}"/>
-            <TextBlock Style="{StaticResource GuideText}" Text="4. F7 приостанавливает и возобновляет выполнение. F10 аварийно останавливает кликер."/>
-            <TextBlock Text="Инструкции по разделам" FontWeight="SemiBold" Margin="0,16,0,6"/>
-            <Expander Header="Главная">
-                <TextBlock Style="{StaticResource GuideText}" Text="Нажмите «Запустить», затем при необходимости «Пауза / Продолжить» или «Остановить». Статус показан справа вверху. Карточки отображают число кликов за запуск, фактическую скорость (CPS) и время работы."/>
+            <TextBlock Text="{ui:Translate 'Инструкция'}" FontSize="19" FontWeight="Bold"/>
+            <TextBlock Text="{ui:Translate 'Быстрый старт'}" FontWeight="SemiBold" Foreground="{DynamicResource Tint}" Margin="0,12,0,4"/>
+            <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate '1. В разделе «Автокликер» выберите «Левая» и «Одиночный клик». Оставьте «Следовать за курсором».'}"/>
+            <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate '2. Выключите «Случайный интервал», задайте интервал 1000 мс и выберите «По количеству повторений». Укажите 3 повторения.'}"/>
+            <TextBlock Style="{StaticResource GuideText}" Text="{Binding QuickStartShortcut}"/>
+            <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate '4. F7 приостанавливает и возобновляет выполнение. F10 аварийно останавливает кликер.'}"/>
+            <TextBlock Text="{ui:Translate 'Инструкции по разделам'}" FontWeight="SemiBold" Margin="0,16,0,6"/>
+            <Expander Header="{ui:Translate 'Главная'}">
+                <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate 'Нажмите «Запустить», затем при необходимости «Пауза / Продолжить» или «Остановить». Статус показан справа вверху. Карточки отображают число кликов за запуск, фактическую скорость (CPS) и время работы.'}"/>
             </Expander>
-            <Expander Header="Автокликер">
-                <TextBlock Style="{StaticResource GuideText}" Text="Выберите кнопку мыши, тип клика и режим повтора: до остановки, по количеству повторений или по времени. Уменьшите интервал для ускорения. Удержание кнопки занимает дополнительное время. «Следовать за курсором» использует его текущую позицию. Для фиксированной точки нажмите «Выбрать позицию через 3 секунды», наведите курсор на цель и проверьте X и Y."/>
+            <Expander Header="{ui:Translate 'Автокликер'}">
+                <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate 'Выберите кнопку мыши, тип клика и режим повтора: до остановки, по количеству повторений или по времени. Уменьшите интервал для ускорения. Удержание кнопки занимает дополнительное время. «Следовать за курсором» использует его текущую позицию. Для фиксированной точки нажмите «Выбрать позицию через 3 секунды», наведите курсор на цель и проверьте X и Y.'}"/>
             </Expander>
-            <Expander Header="Мультикликер">
-                <TextBlock Style="{StaticResource GuideText}" Text="Для примера дважды нажмите «Добавить текущую точку». В первой строке задайте X=300, Y=300 и задержку 500 мс, во второй — X=450, Y=300 и 1000 мс. Замените координаты на безопасные для вашего экрана. Снимите флажок слева, чтобы пропустить точку, или нажмите «Удалить». Кнопка «Выполнить 1 цикл» обрабатывает отмеченные точки сверху вниз, с задержкой после каждого шага."/>
+            <Expander Header="{ui:Translate 'Мультикликер'}">
+                <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate 'Для примера дважды нажмите «Добавить текущую точку». В первой строке задайте X=300, Y=300 и задержку 500 мс, во второй — X=450, Y=300 и 1000 мс. Замените координаты на безопасные для вашего экрана. Снимите флажок слева, чтобы пропустить точку, или нажмите «Удалить». Кнопка «Выполнить 1 цикл» обрабатывает отмеченные точки сверху вниз, с задержкой после каждого шага.'}"/>
             </Expander>
-            <Expander Header="Статистика">
-                <TextBlock Style="{StaticResource GuideText}" Text="«Последний запуск» показывает счётчик текущего или последнего выполнения. «Всего кликов» — накопительный счётчик. CPS — среднее количество кликов в секунду за выполнение. «Очистить локальную статистику» обнуляет накопительный счётчик, а результат последнего запуска остаётся на экране до следующего запуска."/>
+            <Expander Header="{ui:Translate 'Статистика'}">
+                <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate '«Последний запуск» показывает счётчик текущего или последнего выполнения. «Всего кликов» — накопительный счётчик. CPS — среднее количество кликов в секунду за выполнение. «Очистить локальную статистику» обнуляет накопительный счётчик, а результат последнего запуска остаётся на экране до следующего запуска.'}"/>
             </Expander>
-            <Expander Header="Настройки">
-                <TextBlock Style="{StaticResource GuideText}" Text="Выберите F-клавишу или «Ввести кнопку самому…» и нажмите клавишу либо боковую кнопку мыши в этом окне. Укажите число нажатий и нажмите «Применить клавишу». В двойном режиме K → отпустить → K за 300 мс переключает кликер. K → J → K и удержание K не срабатывают. Нажатия продолжают поступать в активное приложение. Для профиля и общих параметров нажмите «Сохранить настройки». Сброс возвращает настройки и точки мультикликера к заводским значениям и сохраняет статистику."/>
+            <Expander Header="{ui:Translate 'Настройки'}">
+                <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate 'Выберите F-клавишу или «Ввести кнопку самому…» и нажмите клавишу либо боковую кнопку мыши в этом окне. Укажите число нажатий и нажмите «Применить клавишу». В двойном режиме K → отпустить → K за 300 мс переключает кликер. K → J → K и удержание K не срабатывают. Нажатия продолжают поступать в активное приложение. Для профиля и общих параметров нажмите «Сохранить настройки». Сброс возвращает настройки и точки мультикликера к заводским значениям и сохраняет статистику.'}"/>
             </Expander>
-            <Expander Header="Оформление">
-                <TextBlock Style="{StaticResource GuideText}" Text="В блоке «Оформление» в левой панели выберите светлую или тёмную тему, затем акцентный цвет. Выбор применяется сразу и сохраняется после перезапуска."/>
+            <Expander Header="{ui:Translate 'Оформление'}">
+                <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate 'В блоке «Оформление» в левой панели выберите светлую или тёмную тему, затем акцентный цвет. Выбор применяется сразу и сохраняется после перезапуска.'}"/>
             </Expander>
-            <Expander Header="Помощь">
-                <TextBlock Style="{StaticResource GuideText}" Text="Нажмите название раздела, чтобы раскрыть инструкцию. Ниже можно составить и скопировать обращение. Профиль создателя доступен в блоке «О программе»."/>
+            <Expander Header="{ui:Translate 'Помощь'}">
+                <TextBlock Style="{StaticResource GuideText}" Text="{ui:Translate 'Нажмите название раздела, чтобы раскрыть инструкцию. Ниже можно составить и скопировать обращение. Профиль создателя доступен в блоке «О программе».'}"/>
             </Expander>
         </StackPanel>
     </Border>

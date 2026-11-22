@@ -27,14 +27,14 @@ public sealed class AutomationEngine : IAutomationEngine, IDisposable
 
     public Task StartSequenceAsync(IReadOnlyList<MultiClickStep> steps, int cycles)
     {
-        if (steps.Count == 0) throw new InvalidOperationException("Добавьте хотя бы одну точку.");
+        if (steps.Count == 0) throw new InvalidOperationException(UiText.Get("Добавьте хотя бы одну точку."));
         if (cycles < 1) throw new ArgumentOutOfRangeException(nameof(cycles));
         return StartAsync(token => RunSequenceAsync(steps, cycles, token));
     }
 
     private Task StartAsync(Func<CancellationToken, Task> action)
     {
-        if (!_singleRun.Wait(0)) throw new InvalidOperationException("Другой сценарий уже выполняется.");
+        if (!_singleRun.Wait(0)) throw new InvalidOperationException(UiText.Get("Другой сценарий уже выполняется."));
         _cts = new CancellationTokenSource();
         _clicks = 0;
         _clock = Stopwatch.StartNew();

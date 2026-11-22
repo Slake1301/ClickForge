@@ -18,29 +18,37 @@ internal static class FeedbackTests
         {
             try
             {
-                foreach (var theme in new[] { "Dark", "Light" }) CheckTheme(theme);
+                foreach (var language in new[] { "ru", "en" })
+                {
+                    UiText.Language = language;
+                    foreach (var theme in new[] { "Dark", "Light" }) CheckTheme(theme, language);
+                }
                 result.SetResult();
             }
             catch (Exception ex) { result.SetException(ex); }
+            finally { UiText.Language = "ru"; }
         });
         thread.SetApartmentState(ApartmentState.STA);
         thread.Start();
         return result.Task;
     }
 
-    private static void CheckTheme(string theme)
+    private static void CheckTheme(string theme, string language)
     {
         var stats = new FakeStats();
         var input = new FakeInput();
         using var engine = new AutomationEngine(input, stats);
-        var settings = new AppSettings { Theme = theme, CheckUpdatesOnStartup = false };
+        var settings = new AppSettings { Theme = theme, Language = language, CheckUpdatesOnStartup = false };
         var viewModel = new MainViewModel(engine, input, new JsonSettingsStore(System.IO.Path.GetTempPath()), stats, settings);
         var window = new MainWindow(viewModel, new GlobalHotkeyService());
+        var picker = (ComboBox)window.FindName("LanguagePicker");
+        Require(picker.SelectedIndex == (language == "en" ? 1 : 0), "The language picker must reflect the saved language");
         viewModel.SelectedSection = 5;
         var panel = (FeedbackPanel)window.FindName("Feedback");
         var guide = (HelpGuide)window.FindName("Guide");
         var expanders = Descendants(guide).OfType<Expander>().ToArray();
         Require(expanders.Length == 7 && expanders.All(item => !item.IsExpanded), "All seven guide topics must start collapsed");
+        Require(Equals(expanders[0].Header, language == "en" ? "Home" : "Главная"), "Help must use the selected language");
         foreach (var expander in expanders)
         {
             var provider = (IExpandCollapseProvider)new ExpanderAutomationPeer(expander).GetPattern(PatternInterface.ExpandCollapse);
@@ -70,7 +78,8 @@ internal static class FeedbackTests
         Require(copy.IsEnabled && preview.Text.Contains("Example reproduction")
             && preview.Text.Contains("ClickForge:") && preview.Text.Contains("Windows:"), "Bug report preview is incomplete");
         category.SelectedIndex = 1;
-        Require(preview.Text.Contains("В какой ситуации") && !preview.Text.Contains("Windows:"), "Wrong suggestion fields");
+        Require(preview.Text.Contains(language == "en" ? "When it would help" : "В какой ситуации")
+            && !preview.Text.Contains("Windows:"), "Wrong suggestion fields");
         category.SelectedIndex = 2;
         Require(((FrameworkElement)panel.FindName("SecondField")).Visibility == Visibility.Collapsed
             && !preview.Text.Contains("ClickForge:"), "Question must have one field and no technical data");

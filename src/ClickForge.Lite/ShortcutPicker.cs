@@ -1,3 +1,4 @@
+using ClickForge.Core;
 namespace ClickForge.Lite;
 
 internal sealed class ShortcutPicker : Form
@@ -13,7 +14,7 @@ internal sealed class ShortcutPicker : Form
 
     public ShortcutPicker()
     {
-        Text = "Кнопка запуска / остановки";
+        Text = UiText.Get("Кнопка запуска / остановки");
         StartPosition = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MinimizeBox = MaximizeBox = false;
@@ -35,7 +36,7 @@ internal sealed class ShortcutPicker : Form
     {
         var key = keyData & Keys.KeyCode;
         if (key == Keys.Escape) { DialogResult = DialogResult.Cancel; return true; }
-        if (key == Keys.F11) { _prompt.Text = "F11 зарезервирована. Нажмите другую кнопку."; return true; }
+        if (key == Keys.F11) { _prompt.Text = UiText.Get("F11 зарезервирована. Нажмите другую кнопку."); return true; }
         if (key != Keys.None) { SelectKey((int)key); return true; }
         return base.ProcessCmdKey(ref msg, keyData);
     }
