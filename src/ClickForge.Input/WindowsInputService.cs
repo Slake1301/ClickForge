@@ -42,7 +42,7 @@ public sealed class WindowsInputService : IInputService
         {
             token.ThrowIfCancellationRequested();
             MouseDown(button);
-            try { await Task.Delay(Math.Clamp(holdDurationMs, 1, 60_000), token).ConfigureAwait(false); }
+            try { await ClickDelay.WaitAsync(Math.Clamp(holdDurationMs, 1, 60_000), token).ConfigureAwait(false); }
             finally { MouseUp(button); }
             if (i + 1 < count) await Task.Delay(50, token).ConfigureAwait(false);
         }
@@ -70,7 +70,7 @@ public sealed class WindowsInputService : IInputService
             _ => throw new ArgumentOutOfRangeException(nameof(button))
         };
         var input = new INPUT { type = 0, mi = new MOUSEINPUT { dwFlags = flags, mouseData = data } };
-        if (SendInput(1, [input], Marshal.SizeOf<INPUT>()) != 1) throw new Win32Exception(Marshal.GetLastWin32Error());
+        if (SendInput(1, in input, InputSize) != 1) throw new Win32Exception(Marshal.GetLastWin32Error());
     }
 
     [Flags]
@@ -78,7 +78,8 @@ public sealed class WindowsInputService : IInputService
     [StructLayout(LayoutKind.Sequential)] private struct INPUT { public uint type; public MOUSEINPUT mi; }
     [StructLayout(LayoutKind.Sequential)] private struct MOUSEINPUT { public int dx, dy; public uint mouseData; public MouseEventFlags dwFlags; public uint time; public nint dwExtraInfo; }
     [StructLayout(LayoutKind.Sequential)] private struct POINT { public int X, Y; }
-    [DllImport("user32.dll", SetLastError = true)] private static extern uint SendInput(uint count, INPUT[] inputs, int size);
+    private static readonly int InputSize = Marshal.SizeOf<INPUT>();
+    [DllImport("user32.dll", SetLastError = true)] private static extern uint SendInput(uint count, in INPUT input, int size);
     [DllImport("user32.dll", SetLastError = true)] private static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll", SetLastError = true)] private static extern bool GetCursorPos(out POINT point);
 }

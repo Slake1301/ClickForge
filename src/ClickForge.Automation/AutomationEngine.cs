@@ -73,7 +73,7 @@ public sealed class AutomationEngine : IAutomationEngine, IDisposable
             await _input.ClickAsync(settings.Button, settings.ClickType, settings.HoldDurationMs, token).ConfigureAwait(false);
             RecordClick();
             var delay = settings.UseRandomInterval ? Random.Shared.Next(settings.IntervalMs, settings.RandomMaxMs + 1) : settings.IntervalMs;
-            await Task.Delay(delay, token).ConfigureAwait(false);
+            await ClickDelay.WaitAsync(delay, token).ConfigureAwait(false);
         }
     }
 
